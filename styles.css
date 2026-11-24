@@ -1,0 +1,140 @@
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 70rem;
+  color: #111;
+  background: #fff;
+}
+
+h1 {
+  font-size: 1.25rem;
+  margin: 0 0 1rem;
+}
+
+h2 {
+  font-size: 1rem;
+  margin: 1.25rem 0 0.25rem;
+}
+
+p {
+  margin: 0.5rem 0;
+}
+
+label {
+  margin-right: 1rem;
+  white-space: nowrap;
+}
+
+input[type="number"] {
+  width: 6rem;
+}
+
+textarea,
+pre {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+textarea {
+  display: block;
+  margin-top: 0.35rem;
+  padding: 0.4rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+#relays {
+  height: 7rem;
+}
+
+#aud {
+  max-width: 100%;
+}
+
+pre {
+  background: #111;
+  color: #0f0;
+  padding: 0.75rem;
+  max-height: 22rem;
+  overflow: auto;
+  border-radius: 4px;
+}
+
+pre:empty {
+  display: none;
+}
+
+button {
+  padding: 0.35rem 0.7rem;
+  margin-right: 0.4rem;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+}
+
+td,
+th {
+  padding: 0.15rem 0.6rem;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+code {
+  font-size: 12px;
+}
+
+.warn {
+  background: #fff8e1;
+  border-left: 4px solid #e6a700;
+  padding: 0.6rem 0.8rem;
+}
+
+.block {
+  display: block;
+  margin: 0.75rem 0;
+}
+
+details {
+  margin: 1.5rem 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+footer {
+  color: #666;
+  font-size: 12px;
+  margin-top: 2rem;
+  border-top: 1px solid #ddd;
+  padding-top: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  body {
+    margin: 1rem auto;
+  }
+
+  label {
+    display: block;
+    margin: 0.3rem 0;
+    white-space: normal;
+  }
+}

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src wss:; base-uri 'none'; form-action 'none'; img-src 'none'">
+<meta name="description" content="Build an extended follows-of-follows list for Nostr and publish it as public NIP-51 kind 30000 lists. Client-side only, no keys, NIP-07 signing.">
+<meta name="theme-color" content="#ffffff">
+<title>Extended follow list</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+<h1>Extended follow list</h1>
+
+<noscript><p class="warn">This tool needs JavaScript and a NIP-07 browser signer (Alby, nos2x, &hellip;).</p></noscript>
+
+<p class="warn"><strong>Unofficial tool.</strong> It publishes a <strong>public</strong>
+<code>kind 30000</code> list to your relays &mdash; anyone can read who is on it, and it
+reveals your guesses about your social graph. This page never sees your key: signing happens
+in your browser signer (Alby, nos2x&hellip;), and relay queries go straight from your browser
+to the relays. Not affiliated with Amethyst or Wisp.</p>
+
+<p>
+  <label>d <input id="d" value="extended" size="8"></label>
+  <label>title <input id="title" value="Extended" size="12"></label>
+  <label>threshold <input id="th" type="number" value="10" min="1" size="3"></label>
+  <label>max members <input id="max" type="number" value="1000" min="1" size="4"></label>
+  <label>chunk size <input id="cs" type="number" value="700" min="100" max="800" size="4"></label>
+  <label><input id="clean" type="checkbox" checked> retire old chunks</label>
+</p>
+<label class="block">Relays
+<textarea id="relays">wss://relay.damus.io
+wss://relay.primal.net
+wss://nos.lol
+wss://nostr.mom
+wss://relay.snort.social</textarea></label>
+
+<p><button id="go">Fetch &amp; analyze</button>
+   <button id="pub" disabled>Sign &amp; publish</button>
+   <button id="dl" disabled>Download ext.txt</button></p>
+
+<pre id="log"></pre>
+<div id="preview"></div>
+
+<p>Audit pubkey: <input id="aud" size="66" placeholder="64-char hex" autocomplete="off" autocapitalize="off" spellcheck="false">
+<button id="audgo">Check</button></p>
+<pre id="audlog"></pre>
+
+<details>
+<summary>FAQ &mdash; read this before publishing</summary>
+
+<h2>Why two (or more) lists?</h2>
+<p>A relay will not store an event over ~64 KB, and each <code>p</code> tag costs ~72 bytes,
+so one list tops out near 700&ndash;750 members. The tool splits members by rank into
+<code>d=extended</code>, <code>d=extended-2</code>, &hellip; Every chunk fits, so every relay
+accepts it, and the copies stay consistent.</p>
+
+<h2>How do I get one feed out of several lists?</h2>
+<p>In Amethyst use the <em>All User Follows</em> filter: it unions your contact list with every
+people list you own, deduplicated. Selecting a single list shows only that chunk.</p>
+
+<h2>I published but nothing changed</h2>
+<p>Lists are read at startup &mdash; force-stop the app and reopen. Also check the publish log:
+any relay answering <code>OK false</code> did not store the list.</p>
+
+<h2>Someone I expect is missing</h2>
+<p>Likely one of: they are below <em>threshold</em> (counted against the follow lists actually
+fetched); they were cut by <em>max members</em>; you already follow them (candidates exclude
+first-degree follows); they are muted (kind 10000); or a relay is serving an older, shorter
+copy of the list. The audit box prints the total member count across all chunks, membership and
+the newest timestamp per relay.</p>
+
+<h2>Relays disagree on the member count</h2>
+<p>That means a publish was too large for some relays and only partly accepted. Keep
+<em>chunk size</em> at 700 or lower and republish until every relay reports the same count and
+timestamp.</p>
+
+<h2>I shrank the list but old people remain</h2>
+<p>Old chunks (<code>d=extended-3</code>, &hellip;) are still published. Keep <em>retire old
+chunks</em> checked and republish: surplus chunk addresses are overwritten with an empty list.
+A different <em>d</em> base is a separate family of lists and must be deleted manually. Then
+force-stop the app and reopen.</p>
+
+<h2>Can members be private?</h2>
+<p>Not here. Clients that offer "private members" encrypt them into the event content; this
+tool publishes public <code>p</code> tags only.</p>
+
+<h2>Do I have to review the candidates?</h2>
+<p>No, but blind publishing keeps the predictable noise: accounts everyone follows, bought
+followers, and dead keys with no profile. A useful cheap filter is a higher threshold.</p>
+</details>
+</main>
+
+<footer>Unofficial, single-purpose tool. Source is this folder &mdash; diff it before you trust it.
+No analytics, no third-party scripts or assets, no keys.</footer>
+
+<script src="sign-list.js" defer></script>
+</body>
+</html>
